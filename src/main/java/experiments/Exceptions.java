@@ -9,6 +9,7 @@ public class Exceptions {
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
+
     }
 
     private static void uncheckedExceptionStr(String[] strArray) {
