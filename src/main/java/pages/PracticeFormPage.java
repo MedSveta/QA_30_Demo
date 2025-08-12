@@ -2,6 +2,7 @@ package pages;
 
 import dto.Student;
 import enums.Gender;
+import enums.Hobbies;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
@@ -9,6 +10,9 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
+import org.testng.Assert;
+
+import java.util.List;
 
 public class PracticeFormPage extends BasePage {
     public PracticeFormPage(WebDriver driver) {
@@ -29,27 +33,65 @@ public class PracticeFormPage extends BasePage {
     WebElement fieldDateOfBirth;
     @FindBy(id = "subjectsInput")
     WebElement fieldSubjects;
+    @FindBy(id = "currentAddress")
+    WebElement textareaAddress;
+    @FindBy(xpath = "//input[@id='react-select-3-input']")
+    WebElement inputState;
+    @FindBy(xpath = "//input[@id='react-select-4-input']")
+    WebElement inputCity;
+    @FindBy(id = "submit")
+    WebElement btnSubmit;
 
 
     public void typePracticeForm(Student student) {
-       hideBanner();
-       hideFooter();
-       fieldFirstName.sendKeys(student.getName());
-       fieldLastName.sendKeys(student.getLastName());
-       fieldEmail.sendKeys(student.getEmail());
-       typeGender(student.getGender());
-       fieldMobile.sendKeys(student.getMobile());
-       //fieldDateOfBirth.sendKeys(student.getDateOfBirth());
+        hideBanner();
+        hideFooter();
+        fieldFirstName.sendKeys(student.getName());
+        fieldLastName.sendKeys(student.getLastName());
+        fieldEmail.sendKeys(student.getEmail());
+        typeGender(student.getGender());
+        fieldMobile.sendKeys(student.getMobile());
+        //fieldDateOfBirth.sendKeys(student.getDateOfBirth());
         typeDateOfBirth(student.getDateOfBirth());
         typeSubjects(student.getSubjects());
+        typeHobbies(student.getHobbies());
+        textareaAddress.sendKeys(student.getAddress());
+        typeStateCity(student.getState(), student.getCity());
+        btnSubmit.click();
+
     }
 
-    private void typeGender(Gender gender){
+    private void typeStateCity(String state, String city){
+        inputState.sendKeys(state);
+        inputState.sendKeys(Keys.ENTER);
+
+        inputCity.sendKeys(city);
+        inputCity.sendKeys(Keys.ENTER);
+    }
+
+    private void typeHobbies(List<Hobbies> hobbies) {
+        for (Hobbies h : hobbies) {
+            switch (h) {
+                case MUSIC:
+                    driver.findElement(By.xpath(h.getLocator())).click();
+                    break;
+                case READING:
+                    driver.findElement(By.xpath(h.getLocator())).click();
+                    break;
+                case SPORTS:
+                    driver.findElement(By.xpath(h.getLocator())).click();
+                    break;
+            }
+
+        }
+    }
+
+    private void typeGender(Gender gender) {
         WebElement btnGender = driver.findElement(By.xpath(gender.getLocator()));
         btnGender.click();
     }
 
-    private void typeDateOfBirth(String dateOfBirth){
+    private void typeDateOfBirth(String dateOfBirth) {
         fieldDateOfBirth.click();
         String operationSystem = System.getProperty("os.name");
         System.out.println(operationSystem);
@@ -61,10 +103,10 @@ public class PracticeFormPage extends BasePage {
         fieldDateOfBirth.sendKeys(Keys.ENTER);
     }
 
-    private void typeSubjects(String subjects){
+    private void typeSubjects(String subjects) {
         fieldSubjects.click();
         String[] arr = subjects.split(",");
-        for (String s: arr){
+        for (String s : arr) {
             fieldSubjects.sendKeys(s);
             fieldSubjects.sendKeys(Keys.ENTER);
         }
